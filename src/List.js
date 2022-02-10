@@ -8,10 +8,8 @@ const List = ({ name, id, onEdit }) => {
     const docRef = doc(db, 'grocery', groceryId);
     try {
       await deleteDoc(docRef);
-      // ALERT
     } catch (error) {
       console.log(error.message);
-      // ALERT
     }
   };
 

@@ -27,11 +27,9 @@ const LoginSignUp = ({ toggleLogin, setToggleLogin }) => {
         .then(() => {
           setToggleLogin(false);
           setFormData(initialState);
-          // ALERT
         })
         .catch((error) => {
-          console.log(error);
-          // ALERT
+          console.log(error.message);
         });
     }
     // LOGIN
@@ -40,11 +38,9 @@ const LoginSignUp = ({ toggleLogin, setToggleLogin }) => {
         .then(() => {
           setToggleLogin(false);
           setFormData(initialState);
-          // ALERT
         })
         .catch((error) => {
-          console.log(error);
-          // ALERT
+          console.log(error.message);
         });
     }
   };

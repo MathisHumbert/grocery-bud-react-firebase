@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import db from './firebase.config';
 import List from './List';
-import Alert from './Alert';
 
 import {
   addDoc,
@@ -22,44 +21,37 @@ function App() {
   const [edit, setEdit] = useState('');
   const [editId, setEditId] = useState('');
   const [toggleLogin, setToggleLogin] = useState(false);
-  const [user, setUser] = useState(null);
+  const [userId, setUserId] = useState(null);
 
   const colRef = collection(db, 'grocery');
   const auth = getAuth();
 
-  // UPDTAE / CREATE DATA
+  // UPDATE / CREATE DATA
   const onSubmit = (e) => {
     e.preventDefault();
     // UPDATE DATA
     if (edit) {
       const docRef = doc(db, 'grocery', editId);
       updateDoc(docRef, { name: inputValue })
-        .then(() => {
-          // ALERT
-          console.log('success');
-        })
+        .then(() => {})
         .catch((error) => {
-          // ALERT
-          console.log(error);
+          console.log(error.message);
         });
       setEdit(false);
       setEditId('');
     }
     // CREATE DATA
     else {
-      addDoc(colRef, { name: inputValue, userRef: user })
-        .then(() => {
-          // ALERT
-          console.log('success');
-        })
+      addDoc(colRef, { name: inputValue, userRef: userId })
+        .then(() => {})
         .catch((error) => {
-          // ALERT
-          console.log(error);
+          console.log(error.message);
         });
     }
     setInputValue('');
   };
 
+  // HANDLE EDIT
   const onEdit = (value, id) => {
     setEdit(true);
     setEditId(id);
@@ -78,19 +70,16 @@ function App() {
   const logoutUser = () => {
     signOut(auth)
       .then(() => {
-        console.log('logout');
-        setUser(null);
-        // ALERT
+        setUserId(null);
       })
       .catch((error) => {
         console.log(error.message);
-        // ALERT
       });
   };
 
   // GET DATA
   useEffect(() => {
-    const q = query(colRef, where('userRef', '==', user));
+    const q = query(colRef, where('userRef', '==', userId));
     onSnapshot(q, (snapchot) => {
       let groceries = [];
       snapchot.docs.forEach((doc) => {
@@ -101,31 +90,33 @@ function App() {
       });
       setGroceryList(groceries);
     });
-  }, [user]);
+  }, [userId]);
 
   useEffect(() => {
-    setUser((auth.currentUser && auth.currentUser.uid) || null);
+    setUserId((auth.currentUser && auth.currentUser.uid) || null);
   }, [auth.currentUser]);
 
   return (
     <>
       <LoginSignUp toggleLogin={toggleLogin} setToggleLogin={setToggleLogin} />
       <section className='section-center'>
-        <h3>grocery bud</h3>
-        {!user && <h4>login to save your grocery list</h4>}
-        {user ? (
-          <button type='button' className='login-btn' onClick={logoutUser}>
-            logout
-          </button>
-        ) : (
-          <button
-            type='button'
-            className='login-btn'
-            onClick={() => setToggleLogin(true)}
-          >
-            login
-          </button>
-        )}
+        <header>
+          <h3>grocery bud</h3>
+          {!userId && <h4>login to save your grocery list</h4>}
+          {userId ? (
+            <button type='button' className='login-btn' onClick={logoutUser}>
+              logout
+            </button>
+          ) : (
+            <button
+              type='button'
+              className='login-btn'
+              onClick={() => setToggleLogin(true)}
+            >
+              login
+            </button>
+          )}
+        </header>
         <form onSubmit={onSubmit} className='grocery-form'>
           <div className='form-control'>
             <input
