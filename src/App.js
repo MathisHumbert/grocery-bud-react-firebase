@@ -2,9 +2,20 @@ import { useState, useEffect } from 'react';
 import db from './firebase.config';
 import List from './List';
 import Alert from './Alert';
-import { addDoc, collection, onSnapshot } from 'firebase/firestore';
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  updateDoc,
+} from 'firebase/firestore';
 
 function App() {
+  const [inputValue, setInputValue] = useState('');
+  const [groceryList, setGroceryList] = useState([]);
+  const [edit, setEdit] = useState('');
+  const [editId, setEditId] = useState('');
+
   const colRef = collection(db, 'grocery');
 
   // GET DATA
@@ -21,15 +32,43 @@ function App() {
     });
   }, []);
 
-  const [inputValue, setInputValue] = useState('');
-  const [groceryList, setGroceryList] = useState([]);
-
-  // CREATE DATA
+  // UPDTAE / CREATE DATA
   const onSubmit = (e) => {
     e.preventDefault();
-    addDoc(colRef, { name: inputValue });
+    // UPDTAE DATA
+    if (edit) {
+      const docRef = doc(db, 'grocery', editId);
+      updateDoc(docRef, { name: inputValue })
+        .then(() => {
+          // ALERT
+          console.log('success');
+        })
+        .catch((error) => {
+          // ALERT
+          console.log(error);
+        });
+      setEdit(false);
+      setEditId('');
+    }
+    // CREATE DATA
+    else {
+      addDoc(colRef, { name: inputValue })
+        .then(() => {
+          // ALERT
+          console.log('success');
+        })
+        .catch((error) => {
+          // ALERT
+          console.log(error);
+        });
+    }
     setInputValue('');
-    // ALERT
+  };
+
+  const onEdit = (value, id) => {
+    setEdit(true);
+    setEditId(id);
+    setInputValue(value);
   };
 
   return (
@@ -45,14 +84,14 @@ function App() {
             onChange={(e) => setInputValue(e.target.value)}
           />
           <button type='submit' className='submit-btn'>
-            submit
+            {edit ? 'edit' : 'submit'}
           </button>
         </div>
       </form>
       <div className='grocery-container'>
         <div className='grocery-list'>
           {groceryList.map((item) => {
-            return <List {...item} key={item.id} />;
+            return <List {...item} key={item.id} onEdit={onEdit} />;
           })}
         </div>
         {groceryList.length > 0 && (
