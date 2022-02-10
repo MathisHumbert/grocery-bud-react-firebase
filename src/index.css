@@ -192,7 +192,13 @@ Grocery List
   color: #155724;
   background: #d4edda;
 }
-.grocery-form h3 {
+.section-center h3,
+.aside-container h3 {
+  color: var(--clr-primary-1);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.section-center h4 {
   color: var(--clr-primary-1);
   margin-bottom: 1.5rem;
   text-align: center;
@@ -216,7 +222,8 @@ Grocery List
   font-family: var(--ff-secondary);
   color: var(--clr-grey-5);
 }
-.submit-btn {
+.submit-btn,
+.login-btn {
   background: var(--clr-primary-8);
   border-color: transparent;
   flex: 0 0 5rem;
@@ -235,6 +242,12 @@ Grocery List
 .submit-btn:hover {
   background: var(--clr-primary-5);
   color: var(--clr-white);
+}
+
+.login-btn {
+  border-radius: var(--radius);
+  margin: 0 auto;
+  margin-bottom: 1.5rem;
 }
 
 .grocery-container {
@@ -303,4 +316,44 @@ Grocery List
 }
 .clear-btn:hover {
   color: var(--clr-red-dark);
+}
+
+aside {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+aside.open {
+  z-index: 5;
+  opacity: 1;
+}
+
+.aside-container {
+  margin-top: 0;
+}
+
+.aside-container .form-control {
+  margin-top: 1.5rem;
+}
+
+.aside-container .login-btn {
+  margin-top: 2rem;
+}
+
+.form-control label {
+  color: var(--clr-primary-1);
+  margin-right: 1rem;
+  min-width: 80px;
+}
+
+.aside-container span {
+  color: var(--clr-primary-1);
+  cursor: pointer;
 }
