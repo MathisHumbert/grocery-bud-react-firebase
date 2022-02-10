@@ -91,7 +91,7 @@ function App() {
   // GET DATA
   useEffect(() => {
     const q = query(colRef, where('userRef', '==', user));
-    onSnapshot(colRef, (snapchot) => {
+    onSnapshot(q, (snapchot) => {
       let groceries = [];
       snapchot.docs.forEach((doc) => {
         groceries.push({
@@ -101,7 +101,7 @@ function App() {
       });
       setGroceryList(groceries);
     });
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     setUser((auth.currentUser && auth.currentUser.uid) || null);
